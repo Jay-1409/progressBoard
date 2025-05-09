@@ -14,5 +14,4 @@ import java.util.Optional;
 public interface DayRepository extends MongoRepository<Day, ObjectId> {
     Optional<Day> findByUserIdAndDateFor(ObjectId userId, LocalDate dateFor);
     List<Day> findByIdIn(List<ObjectId> ids);
-
 }

@@ -48,6 +48,16 @@ public class Day {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateFor;
     private List<Task> tasks;
+
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
+
+    private double progress;
     public static class Task {
 //        @Id
 //        private ObjectId TaskId;

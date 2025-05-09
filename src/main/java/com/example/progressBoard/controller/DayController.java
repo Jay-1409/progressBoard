@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/task")
 public class DayController {
@@ -30,6 +32,16 @@ public class DayController {
         try {
             System.out.println("Fetching tasks for user: " + userId);
             return new ResponseEntity<>(dayService.getTasks(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Failed to get tasks for user " + userId + ": " + e.getMessage());
+            return new ResponseEntity<>("Could not get user task data", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/get-user-tasks-date/{userId}")
+    private ResponseEntity<?> getUserTasks(@PathVariable("userId") ObjectId userId, @RequestBody LocalDate reqDate) {
+        try {
+            System.out.println("Fetching tasks for user: " + userId);
+            return new ResponseEntity<>(dayService.getTasksByDate(userId, reqDate), HttpStatus.OK);
         } catch (Exception e) {
             System.err.println("Failed to get tasks for user " + userId + ": " + e.getMessage());
             return new ResponseEntity<>("Could not get user task data", HttpStatus.BAD_REQUEST);

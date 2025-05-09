@@ -16,10 +16,12 @@ public class GroupController {
     private GroupService groupService;
     @PostMapping("/create-group")
     private ResponseEntity<Group> NewGroup(@RequestBody Group newGroup) {
-        try{
+        try {
             groupService.createGroup(newGroup);
+            System.out.println("Group created successfully: " + newGroup);
             return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
-        } catch(Exception e) {
+        } catch (Exception e) {
+            System.err.println("Failed to create group: " + e.getMessage());
             return new ResponseEntity<>(newGroup, HttpStatus.BAD_REQUEST);
         }
     }
@@ -27,8 +29,10 @@ public class GroupController {
     public ResponseEntity<?> AddMember(@PathVariable("userId") ObjectId userID, @PathVariable("groupID") ObjectId groupID) {
         try {
             groupService.addMember(groupID, userID);
+            System.out.println("User " + userID + " added to group " + groupID);
             return new ResponseEntity<>("User added to group", HttpStatus.OK);
         } catch (Exception e) {
+            System.err.println("Failed to add user " + userID + " to group " + groupID + ": " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -36,9 +40,12 @@ public class GroupController {
     public ResponseEntity<?> GetAllData(@PathVariable("GroupId") ObjectId GroupId) {
         try {
             List<?> data = groupService.getAll(GroupId);
+            System.out.println("Fetched group data for GroupId: " + GroupId);
             return new ResponseEntity<>(data, HttpStatus.OK);
         } catch (Exception e) {
+            System.err.println("Failed to fetch group data for GroupId " + GroupId + ": " + e.getMessage());
             return new ResponseEntity<>("Could not fetch members", HttpStatus.NO_CONTENT);
         }
     }
+
 }

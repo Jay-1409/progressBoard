@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-
+import com.example.progressBoard.entity.TaskProgress;
 import com.example.progressBoard.service.UserService;
 @Component
 public class DayService {
@@ -39,21 +39,39 @@ public class DayService {
             throw new RuntimeException("Day not found for the user on given date: " + updatedDay.getDateFor());
         }
     }
-//    @JsonFormat(pattern = "yyyy-MM-dd")
-//    private LocalDate date;
-    public List<Day.Task> getTasks(ObjectId userId) {
+    public TaskProgress getTasks(ObjectId userId) {
         Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) return new ArrayList<>();
+        if (userOpt.isEmpty()) return new TaskProgress(new ArrayList<>(), 0);
+
         User user = userOpt.get();
         List<ObjectId> dayIds = user.getDayIds();
         List<Day> days = dayRepository.findByIdIn(dayIds);
+
         for (Day day : days) {
             if (day.getDateFor().equals(LocalDate.now())) {
-                return day.getTasks();
+                return new TaskProgress(day.getTasks(), day.getProgress());
             }
         }
-        return new ArrayList<>();
+        return new TaskProgress(new ArrayList<>(), 0);
     }
+
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    private LocalDate date;
+//    public List<Day.Task> getTasks(ObjectId userId) {
+//        Optional<User> userOpt = userRepository.findById(userId);
+//        if (userOpt.isEmpty()) return new ArrayList<>();
+//        User user = userOpt.get();
+//        List<ObjectId> dayIds = user.getDayIds();
+//        List<Day> days = dayRepository.findByIdIn(dayIds);
+//        System.out.println("Today is: " + LocalDate.now());
+//        for (Day day : days) {
+//            if (day.getDateFor().equals(LocalDate.now())) {
+//                System.out.println("Progress for this day : " + day.getProgress());
+//                return day.getTasks();
+//            }
+//        }
+//        return new ArrayList<>();
+//    }
     public List<Day.Task> getTasksByDate(ObjectId userId, LocalDate date) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) return new ArrayList<>();
@@ -68,7 +86,7 @@ public class DayService {
         return new ArrayList<>();
     }
     public boolean updateUserProgress(ObjectId userId) {
-        List<Day.Task> tasks = getTasks(userId);
+        List<Day.Task> tasks = getTasks(userId).getTasks();
         if(tasks.isEmpty() || tasks == null) return false;
         int total = tasks.size();
         long completed = tasks.stream().filter(Day.Task::isCompleted).count();

@@ -16,7 +16,8 @@ import java.util.*;
 public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     public void createGroup(Group newGroup) {
         groupRepository.save(newGroup);
     }
@@ -30,13 +31,27 @@ public class GroupService {
             System.out.println("Group not found");
         }
     }
-    public List<ObjectId> getAll(ObjectId groupId) {
+    public List<ObjectId> getAllMem(ObjectId groupId) {
         Optional<Group> currentGroup = groupRepository.findById(groupId);
         if(currentGroup.isPresent()){
             Group presentGroup = currentGroup.get();
 //            System.out.println("Returning member IDs: " + presentGroup.getMemberIds());
         }
         return groupRepository.findById(groupId).get().getMemberIds();
+    }
+    public List<Group> fetchUsersAllGroups(ObjectId userId) {
+        Optional<User> reqUser= userRepository.findById(userId);
+        if(reqUser.isPresent()){
+            User activeuser = reqUser.get();
+            List<ObjectId> activeGroupIds = activeuser.getGroupIds();
+            List<Group> activeGroups = new ArrayList<>();
+            for (ObjectId groupId : activeGroupIds) {
+                Optional<Group> group = groupRepository.findById(groupId);
+                group.ifPresent(activeGroups::add);
+            }
+            return activeGroups;
+        }
+        return null;
     }
 //    public void addUserToGroup_group(ObjectId UUID, ObjectId GUID) {
 //        Optional<Group> oGrp = groupRepository.findById(GUID);

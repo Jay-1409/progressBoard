@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Progress Board API Frontend</title>
+</head>
+<body>
+<h1>Progress Board API Interface</h1>
+
+<!-- Create User -->
+<h2>Create User</h2>
+<form id="createUserForm">
+    <input type="text" id="userName" placeholder="User Name" required />
+    <input type="email" id="userEmail" placeholder="Email" required />
+    <button type="submit">Create User</button>
+</form>
+
+<!-- Create Group -->
+<h2>Create Group</h2>
+<form id="createGroupForm">
+    <input type="text" id="groupName" placeholder="Group Name" required />
+    <button type="submit">Create Group</button>
+</form>
+
+<!-- Add Task -->
+<h2>Add Task</h2>
+<form id="addTaskForm">
+    <input type="text" id="taskUserId" placeholder="User ID" required />
+    <input type="text" id="taskName" placeholder="Task Name" required />
+    <input type="date" id="taskDate" placeholder="Date" required />
+    <button type="submit">Add Task</button>
+</form>
+
+<!-- Get Tasks -->
+<h2>Get Tasks</h2>
+<form id="getTasksForm">
+    <input type="text" id="getTaskUserId" placeholder="User ID" required />
+    <button type="submit">Get Tasks</button>
+</form>
+<pre id="tasksOutput"></pre>
+
+<!-- Join Group -->
+<h2>Join Group</h2>
+<form id="joinGroupForm">
+    <input type="text" id="joinUserId" placeholder="User ID" required />
+    <input type="text" id="joinGroupId" placeholder="Group ID" required />
+    <button type="submit">Join Group</button>
+</form>
+
+<!-- Get Group Data -->
+<h2>Get Group Data</h2>
+<form id="getGroupForm">
+    <input type="text" id="getGroupId" placeholder="Group ID" required />
+    <button type="submit">Get Group Data</button>
+</form>
+<pre id="groupOutput"></pre>
+
+<script>
+    const BASE_URL = 'http://localhost:8081';
+
+    // Create User
+    document.getElementById('createUserForm').onsubmit = async e => {
+      e.preventDefault();
+      const name = document.getElementById('userName').value;
+      const email = document.getElementById('userEmail').value;
+      const res = await fetch(`${BASE_URL}/user`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+      alert(await res.text());
+    };
+
+    // Create Group
+    document.getElementById('createGroupForm').onsubmit = async e => {
+      e.preventDefault();
+      const name = document.getElementById('groupName').value;
+      const res = await fetch(`${BASE_URL}/group/create-group`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      alert(await res.text());
+    };
+
+    // Add Task
+    document.getElementById('addTaskForm').onsubmit = async e => {
+      e.preventDefault();
+      const userId = document.getElementById('taskUserId').value;
+      const task = document.getElementById('taskName').value;
+      const date = document.getElementById('taskDate').value;
+      const res = await fetch(`${BASE_URL}/task/add-task/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date, task })
+      });
+      alert(await res.text());
+    };
+
+    // Get Tasks
+    document.getElementById('getTasksForm').onsubmit = async e => {
+      e.preventDefault();
+      const userId = document.getElementById('getTaskUserId').value;
+      const res = await fetch(`${BASE_URL}/task/get-user-tasks/${userId}`);
+      const data = await res.json();
+      document.getElementById('tasksOutput').textContent = JSON.stringify(data, null, 2);
+    };
+
+    // Join Group
+    document.getElementById('joinGroupForm').onsubmit = async e => {
+      e.preventDefault();
+      const userId = document.getElementById('joinUserId').value;
+      const groupId = document.getElementById('joinGroupId').value;
+      const res = await fetch(`${BASE_URL}/user/join-group/${userId}/${groupId}`, {
+        method: 'POST'
+      });
+      alert(await res.text());
+    };
+
+    // Get Group Data
+    document.getElementById('getGroupForm').onsubmit = async e => {
+      e.preventDefault();
+      const groupId = document.getElementById('getGroupId').value;
+      const res = await fetch(`${BASE_URL}/group/get-all-group-data/${groupId}`);
+      const data = await res.json();
+      document.getElementById('groupOutput').textContent = JSON.stringify(data, null, 2);
+    };
+</script>
+</body>
+</html>

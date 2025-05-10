@@ -11,4 +11,6 @@ public class indexController {
     public String homePage() {
         return "index"; // loads notice.html
     }
+    @GetMapping("/forms")
+    public String formsPage() {return "forms";}
 }

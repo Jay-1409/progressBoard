@@ -21,12 +21,14 @@ public class GroupController {
     private AuthService authService;
     @Autowired
     private UserService userService;
-    @PostMapping("/create-group")
-    private ResponseEntity<String> NewGroup(@RequestBody Group newGroup) {
+    @PostMapping("/create-group/{userId}")
+    private ResponseEntity<String> NewGroup(@PathVariable("userId") ObjectId userId, @RequestBody Group newGroup) {
         try {
             groupService.createGroup(newGroup);
             System.out.println("Group created successfully: " + newGroup);
-            return new ResponseEntity<>(newGroup.getId().toString(), HttpStatus.CREATED);
+            ObjectId groupId = newGroup.getId();
+            userService.adderUserToGroup_user(userId, groupId);
+            return new ResponseEntity<>(groupId.toString(), HttpStatus.CREATED);
         } catch (Exception e) {
             System.err.println("Failed to create group: " + e.getMessage());
             return new ResponseEntity<>("Failed to create group", HttpStatus.BAD_REQUEST);
@@ -41,6 +43,7 @@ public class GroupController {
                 System.out.println("User " + userID + " added to group " + groupID);
             } else {
                 System.out.println("User input password does not match");
+                return new ResponseEntity<>("Action Done!", HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>("Action Done!", HttpStatus.OK);
         } catch (Exception e) {
@@ -48,6 +51,8 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+//    @DeleteMapping("delete-member/{userId}/{groupId}")
+//    public
     @GetMapping("/get-all-group-members/{GroupId}")
     public ResponseEntity<?> GetAllData(@PathVariable("GroupId") ObjectId GroupId) {
         try {

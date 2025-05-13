@@ -16,6 +16,15 @@ public class User {
     private String email;
     private List<ObjectId> groupIds = new ArrayList<>();
     private List<ObjectId> DayIds = new ArrayList<>();
+    private double todayProgress;
+    public double getTodayProgress() {
+        return todayProgress;
+    }
+
+    public void setTodayProgress(double todayProgress) {
+        this.todayProgress = todayProgress;
+    }
+
     // object day, which contain the tasks for that day, the object id then stored into a list in the user
     public ObjectId getId() {
         return id;

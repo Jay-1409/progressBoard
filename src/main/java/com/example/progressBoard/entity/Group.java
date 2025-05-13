@@ -8,12 +8,21 @@ import java.util.List;
 @Document(collection = "groups")
 public class Group {
     @Id private ObjectId id;
+    private String ObId;
     private String name;
     private String groupPass;
     private List<ObjectId> memberIds;
 
     public ObjectId getId() {
         return id;
+    }
+
+    public String getObId() {
+        return ObId;
+    }
+
+    public void setObId(String obId) {
+        ObId = obId;
     }
 
     public void setId(ObjectId id) {

@@ -3,62 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <title>Progress Board API Frontend</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Progress Board API Interface</h1>
+<body class="bg-light text-dark">
+<div class="container py-4">
+    <h1 class="mb-4">Progress Board API Interface</h1>
 
-<!-- Create User -->
-<h2>Create User</h2>
-<form id="createUserForm">
-    <input type="text" id="userName" placeholder="User Name" required />
-    <input type="email" id="userEmail" placeholder="Email" required />
-    <button type="submit">Create User</button>
-</form>
+    <!-- Create User -->
+    <section class="mb-4">
+        <h2>Create User</h2>
+        <form id="createUserForm" class="row g-2">
+            <div class="col-md-6">
+                <input type="text" id="userName" class="form-control" placeholder="Username" required />
+            </div>
+            <div class="col-md-6">
+                <input type="email" id="userEmail" class="form-control" placeholder="Email" required />
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary">Create User</button>
+            </div>
+        </form>
+    </section>
 
-<!-- Create Group -->
-<h2>Create Group</h2>
-<form id="createGroupForm">
-    <input type="text" id="groupName" placeholder="Group Name" required />
-    <button type="submit">Create Group</button>
-</form>
+    <!-- Create Group -->
+    <section class="mb-4">
+        <h2>Create Group</h2>
+        <form id="createGroupForm" class="row g-2">
+            <div class="col-md-6">
+                <input type="text" id="groupName" class="form-control" placeholder="Group Name" required />
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary">Create Group</button>
+            </div>
+        </form>
+    </section>
 
-<!-- Add Task -->
-<h2>Add Task</h2>
-<form id="addTaskForm">
-    <input type="text" id="taskUserId" placeholder="User ID" required />
-    <input type="text" id="taskName" placeholder="Task Name" required />
-    <input type="date" id="taskDate" placeholder="Date" required />
-    <button type="submit">Add Task</button>
-</form>
+    <!-- Add Task -->
+    <section class="mb-4">
+        <h2>Add Task</h2>
+        <form id="addTaskForm" class="row g-2">
+            <div class="col-md-4">
+                <input type="text" id="taskUserId" class="form-control" placeholder="User ID" required />
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="taskName" class="form-control" placeholder="Task Title" required />
+            </div>
+            <div class="col-md-4">
+                <input type="date" id="taskDate" class="form-control" required />
+            </div>
+            <div class="col-12">
+                <button class="btn btn-success">Add Task</button>
+            </div>
+        </form>
+    </section>
 
-<!-- Get Tasks -->
-<h2>Get Tasks</h2>
-<form id="getTasksForm">
-    <input type="text" id="getTaskUserId" placeholder="User ID" required />
-    <button type="submit">Get Tasks</button>
-</form>
-<pre id="tasksOutput"></pre>
+    <!-- Get Tasks -->
+    <section class="mb-4">
+        <h2>Get User Tasks</h2>
+        <form id="getTasksForm" class="row g-2">
+            <div class="col-md-6">
+                <input type="text" id="getTaskUserId" class="form-control" placeholder="User ID" required />
+            </div>
+            <div class="col-12">
+                <button class="btn btn-info">Get Tasks</button>
+            </div>
+        </form>
+        <pre class="bg-white border p-3 mt-3" id="tasksOutput"></pre>
+    </section>
 
-<!-- Join Group -->
-<h2>Join Group</h2>
-<form id="joinGroupForm">
-    <input type="text" id="joinUserId" placeholder="User ID" required />
-    <input type="text" id="joinGroupId" placeholder="Group ID" required />
-    <button type="submit">Join Group</button>
-</form>
+    <!-- Join Group -->
+    <section class="mb-4">
+        <h2>Join Group</h2>
+        <form id="joinGroupForm" class="row g-2">
+            <div class="col-md-6">
+                <input type="text" id="joinUserId" class="form-control" placeholder="User ID" required />
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="joinGroupId" class="form-control" placeholder="Group ID" required />
+            </div>
+            <div class="col-12">
+                <button class="btn btn-warning">Join Group</button>
+            </div>
+        </form>
+    </section>
 
-<!-- Get Group Data -->
-<h2>Get Group Data</h2>
-<form id="getGroupForm">
-    <input type="text" id="getGroupId" placeholder="Group ID" required />
-    <button type="submit">Get Group Data</button>
-</form>
-<pre id="groupOutput"></pre>
+    <!-- Get Group Data -->
+    <section class="mb-4">
+        <h2>Get Group Data</h2>
+        <form id="getGroupForm" class="row g-2">
+            <div class="col-md-6">
+                <input type="text" id="getGroupId" class="form-control" placeholder="Group ID" required />
+            </div>
+            <div class="col-12">
+                <button class="btn btn-secondary">Get Group Data</button>
+            </div>
+        </form>
+        <pre class="bg-white border p-3 mt-3" id="groupOutput"></pre>
+    </section>
+</div>
 
 <script>
     const BASE_URL = 'https://progress-board-1409-20917d01.koyeb.app';
 
-    // Create User
     document.getElementById('createUserForm').onsubmit = async e => {
       e.preventDefault();
       const name = document.getElementById('userName').value;
@@ -66,12 +112,11 @@
       const res = await fetch(`${BASE_URL}/user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email })
+        body: JSON.stringify({ username: name, email })
       });
       alert(await res.text());
     };
 
-    // Create Group
     document.getElementById('createGroupForm').onsubmit = async e => {
       e.preventDefault();
       const name = document.getElementById('groupName').value;
@@ -83,7 +128,6 @@
       alert(await res.text());
     };
 
-    // Add Task
     document.getElementById('addTaskForm').onsubmit = async e => {
       e.preventDefault();
       const userId = document.getElementById('taskUserId').value;
@@ -92,12 +136,11 @@
       const res = await fetch(`${BASE_URL}/task/add-task/${userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date, task })
+        body: JSON.stringify({ dateFor: date, tasks: [{ title: task, completed: false }] })
       });
       alert(await res.text());
     };
 
-    // Get Tasks
     document.getElementById('getTasksForm').onsubmit = async e => {
       e.preventDefault();
       const userId = document.getElementById('getTaskUserId').value;
@@ -106,7 +149,6 @@
       document.getElementById('tasksOutput').textContent = JSON.stringify(data, null, 2);
     };
 
-    // Join Group
     document.getElementById('joinGroupForm').onsubmit = async e => {
       e.preventDefault();
       const userId = document.getElementById('joinUserId').value;
@@ -117,7 +159,6 @@
       alert(await res.text());
     };
 
-    // Get Group Data
     document.getElementById('getGroupForm').onsubmit = async e => {
       e.preventDefault();
       const groupId = document.getElementById('getGroupId').value;

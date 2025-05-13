@@ -24,6 +24,7 @@ public class DayService {
     public void addDay(ObjectId userId, Day newDay) {
         newDay.setUserId(userId);
         newDay.setId(new ObjectId());
+//        System.out.println("New day is: " + newDay);
         this.userService.addTaskToUser(userId, newDay.getId());
         dayRepository.save(newDay);
         updateUserProgress(userId);
@@ -42,14 +43,13 @@ public class DayService {
     public TaskProgress getTasks(ObjectId userId) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) return new TaskProgress(new ArrayList<>(), 0);
-
         User user = userOpt.get();
         List<ObjectId> dayIds = user.getDayIds();
         List<Day> days = dayRepository.findByIdIn(dayIds);
-
         for (Day day : days) {
-            if (day.getDateFor().equals(LocalDate.now())) {
-                return new TaskProgress(day.getTasks(), day.getProgress());
+//            System.out.println("DATE FOR: " + day.getId() + ":" + (day.getDateFor() != null ? day.getDateFor() : "field is empty"));
+            if (day.getDateFor() != null && day.getDateFor().equals(LocalDate.now())) {
+               return new TaskProgress(day.getTasks(), day.getProgress());
             }
         }
         return new TaskProgress(new ArrayList<>(), 0);
@@ -98,8 +98,23 @@ public class DayService {
             Day okDay = reqDay.get();
             okDay.setProgress(progress);
             dayRepository.save(okDay);
+            Optional<User> reqUser = userRepository.findById(userId);
+            if(reqUser.isPresent()){
+                User activeUser = reqUser.get();
+                activeUser.setTodayProgress(progress);
+                userRepository.save(activeUser);
+            }
             return true;
         }
         return false;
+    }
+    public void updateUser_progress(ObjectId UUID, double newProgress) {
+        // updates the progress in the user entity
+        Optional<User> reqUser = userRepository.findById(UUID);
+        if(reqUser.isPresent()){
+            User activeUser = reqUser.get();
+            activeUser.setTodayProgress(newProgress);
+            userRepository.save(activeUser);
+        }
     }
 }

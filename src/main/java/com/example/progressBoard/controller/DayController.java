@@ -18,15 +18,22 @@ public class DayController {
     private DayService dayService;
     @PostMapping("/add-task/{userId}")
     private ResponseEntity<?> addDay(@PathVariable("userId") ObjectId userId, @RequestBody Day newDay) {
+        System.out.println("Received request to add tasks for userId: " + userId);
+        System.out.println("Request Body (newDay): " + newDay.getTasks());
+        System.out.println("Request Body (newDay): " + newDay.getDateFor());
+        System.out.println("Request Body (newDay): " + newDay.getUserId());
         try {
+            System.out.println("Adding tasks for user " + userId + ": " + newDay);
             dayService.addDay(userId, newDay);
             System.out.println("Task added successfully for user: " + userId + " | Task: " + newDay);
             return new ResponseEntity<>(newDay, HttpStatus.CREATED);
         } catch (Exception e) {
             System.err.println("Failed to add task for user " + userId + ": " + e.getMessage());
+            e.printStackTrace();
             return new ResponseEntity<>("Could not add the daily tasks", HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("/get-user-tasks/{userId}")
     private ResponseEntity<?> getUserTasks(@PathVariable("userId") ObjectId userId) {
         try {

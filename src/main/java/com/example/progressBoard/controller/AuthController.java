@@ -18,6 +18,7 @@ public class AuthController {
         try {
             return new ResponseEntity<> (authService.validateUser(email , inPass), HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }

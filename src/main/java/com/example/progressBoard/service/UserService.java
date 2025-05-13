@@ -31,6 +31,7 @@ public class UserService {
             userRepository.save(activeUser);
         }
     }
+
     public void adderUserToGroup_user(ObjectId UUID, ObjectId GUID) {
         Optional<User> usr = userRepository.findById(UUID);
         if(usr.isPresent()) {

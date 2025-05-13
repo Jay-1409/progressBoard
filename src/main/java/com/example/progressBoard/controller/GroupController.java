@@ -2,8 +2,10 @@ package com.example.progressBoard.controller;
 
 import com.example.progressBoard.entity.Group;
 import com.example.progressBoard.entity.User;
+import com.example.progressBoard.entity.groupUserData;
 import com.example.progressBoard.service.AuthService;
 import com.example.progressBoard.service.GroupService;
+import com.example.progressBoard.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,15 +19,17 @@ public class GroupController {
     private GroupService groupService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private UserService userService;
     @PostMapping("/create-group")
-    private ResponseEntity<Group> NewGroup(@RequestBody Group newGroup) {
+    private ResponseEntity<String> NewGroup(@RequestBody Group newGroup) {
         try {
             groupService.createGroup(newGroup);
             System.out.println("Group created successfully: " + newGroup);
-            return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
+            return new ResponseEntity<>(newGroup.getId().toString(), HttpStatus.CREATED);
         } catch (Exception e) {
             System.err.println("Failed to create group: " + e.getMessage());
-            return new ResponseEntity<>(newGroup, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Failed to create group", HttpStatus.BAD_REQUEST);
         }
     }
     @PutMapping("add-member/{userId}/{groupID}")
@@ -33,7 +37,7 @@ public class GroupController {
         try {
 //            ObjectId oI = new ObjectId(id);
             if(authService.validateGroupJoin(groupID, inPsas)) {
-                groupService.addMember(groupID, userID);
+                userService.adderUserToGroup_user(userID, groupID);
                 System.out.println("User " + userID + " added to group " + groupID);
             } else {
                 System.out.println("User input password does not match");
@@ -66,5 +70,24 @@ public class GroupController {
             System.err.println("Failed to fetch group data for UserId " + userId + ": " + e.getMessage());
             return new ResponseEntity<>("Could not fetch members", HttpStatus.NO_CONTENT);
         }
+    }
+    @DeleteMapping
+    public ResponseEntity<?> deleteGroups(@RequestParam ObjectId userId, @RequestParam ObjectId groupId) {
+        try {
+            groupService.deleteGroupForUser(userId, groupId);
+            return ResponseEntity.ok("Group successfully deleted for the user.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting group: " + e.getMessage());
+        }
+    }
+    @GetMapping("/getUsers_and_progress")
+    public ResponseEntity<?> getUserProgress(@RequestParam ObjectId groupId) {
+        try {
+            List<groupUserData> groupUserData = groupService.getAllMembersAndProgress(groupId);
+            return new ResponseEntity<>(groupUserData, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error deleting group: " + e.getMessage());        }
     }
 }

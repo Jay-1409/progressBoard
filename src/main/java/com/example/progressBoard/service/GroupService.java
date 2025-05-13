@@ -111,6 +111,21 @@ public class GroupService {
         } else return false;
         return true;
     }
+    public boolean leaveGroup(ObjectId userId, ObjectId groupId) {
+        Optional<Group> reqGroup = groupRepository.findById(groupId);
+        if(reqGroup.isPresent()) {
+            Group activeGroup = reqGroup.get();
+            activeGroup.getMemberIds().remove(userId);
+            groupRepository.save(activeGroup);
+        } else return false;
+        Optional<User> reqUser = userRepository.findById(userId);
+        if(reqUser.isPresent()){
+            User activeUser = reqUser.get();
+            activeUser.getGroupIds().remove(groupId);
+            userRepository.save(activeUser);
+        } else return false;
+        return true;
+    }
 //    public void addUserToGroup_group(ObjectId UUID, ObjectId GUID) {
 //        Optional<Group> oGrp = groupRepository.findById(GUID);
 //        if(oGrp.isPresent()) {

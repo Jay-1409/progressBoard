@@ -51,8 +51,14 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-//    @DeleteMapping("delete-member/{userId}/{groupId}")
-//    public
+    @DeleteMapping("delete-member/{userId}/{groupId}")
+    public ResponseEntity<?> deleteMember(@PathVariable("userId") ObjectId userId, @PathVariable("groupId") ObjectId groupId) {
+        try {
+            return new ResponseEntity<>(groupService.leaveGroup(userId, groupId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
     @GetMapping("/get-all-group-members/{GroupId}")
     public ResponseEntity<?> GetAllData(@PathVariable("GroupId") ObjectId GroupId) {
         try {

@@ -43,4 +43,12 @@ public class UserService {
             System.out.println("COULD NOT FIND THE USER : " + UUID);
         }
     }
+    public String getUserName(ObjectId userId) {
+        Optional<User> reqUsr = userRepository.findById(userId);
+        if(reqUsr.isPresent()){
+            User activeUsr = reqUsr.get();
+            return activeUsr.getUsername();
+        }
+        return "No user name found!";
+    }
 }

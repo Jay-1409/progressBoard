@@ -30,7 +30,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("sjay140905@gmail.com");
         message.setTo(to);
-        message.setSubject("OTP FOR COMPETITIVE TO DO");
+        message.setSubject("Otp for progressBoard");
         int otp = authService.generateOtp(to);
         System.out.println("Otp for email: " + to + " :" + otp);
         message.setText("Enter this code to login: " + otp);

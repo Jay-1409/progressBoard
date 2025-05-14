@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Control Panel</title>
+</head>
+<body>
+<h1>Admin Control Panel</h1>
+
+<!-- Create New Admin -->
+<section>
+    <h2>Create New Admin</h2>
+    <input type="text" id="newAdminName" placeholder="New Admin Name" required>
+    <input type="email" id="newAdminEmail" placeholder="New Admin Email" required>
+    <input type="password" id="newAdminPass" placeholder="New Admin Password" required>
+    <button onclick="createNewAdmin()">Create Admin</button>
+</section>
+
+<hr>
+
+<!-- Reset All Progress -->
+<section>
+    <h2>Reset All User Progress</h2>
+    <button onclick="resetAllProgress()">Reset Progress</button>
+</section>
+
+<script>
+    const BASE_URL = 'http://localhost:8081/Admin';
+
+    async function createNewAdmin() {
+        const currentAdminEmail = sessionStorage.getItem('adminEmail');
+        const currentAdminPass = sessionStorage.getItem('adminPass');
+
+        const newName = document.getElementById('newAdminName').value.trim();
+        const newEmail = document.getElementById('newAdminEmail').value.trim();
+        const newPass = document.getElementById('newAdminPass').value.trim();
+
+        if (!currentAdminEmail || !currentAdminPass) {
+            alert("Admin not logged in. Please log in again.");
+            window.location.href = "admin.html";
+            return;
+        }
+
+        const url = `${BASE_URL}/new-admin/${currentAdminEmail}?pass=${encodeURIComponent(currentAdminPass)}&newAdminName=${encodeURIComponent(newName)}&newAdminEmail=${encodeURIComponent(newEmail)}&newAdminPass=${encodeURIComponent(newPass)}`;
+
+        try {
+            const res = await fetch(url, { method: 'POST' });
+            if (res.ok) {
+                alert('New admin created successfully!');
+            } else {
+                alert('Failed to create new admin.');
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('An error occurred while creating admin.');
+        }
+    }
+
+    async function resetAllProgress() {
+        try {
+            const res = await fetch(`${BASE_URL}/resetAllProgress`);
+            const msg = await res.text();
+
+            if (res.ok) {
+                alert('All user progress has been reset.\nResponse: ' + msg);
+            } else {
+                alert('Failed to reset progress.');
+            }
+        } catch (error) {
+            console.error('Error resetting progress:', error);
+            alert('An error occurred while resetting progress.');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+</head>
+<body>
+<h1>Admin Panel</h1>
+
+<!-- Admin Login -->
+<section>
+    <h2>Admin Login</h2>
+    <input type="email" id="adminLoginEmail" placeholder="Admin Email" required>
+    <input type="password" id="adminLoginPass" placeholder="Admin Password" required>
+    <button onclick="adminLogin()">Login</button>
+</section>
+
+<hr>
+
+<!-- Create New Admin -->
+<!--<section>-->
+<!--    <h2>Create New Admin</h2>-->
+<!--    <input type="email" id="currentAdminEmail" placeholder="Current Admin Email" required>-->
+<!--    <input type="password" id="currentAdminPass" placeholder="Current Admin Password" required>-->
+<!--    <br><br>-->
+<!--    <input type="text" id="newAdminName" placeholder="New Admin Name" required>-->
+<!--    <input type="email" id="newAdminEmail" placeholder="New Admin Email" required>-->
+<!--    <input type="password" id="newAdminPass" placeholder="New Admin Password" required>-->
+<!--    <button onclick="createNewAdmin()">Create Admin</button>-->
+<!--</section>-->
+
+<script>
+    const BASE_URL = 'http://localhost:8081/Admin';
+
+    async function adminLogin() {
+        const email = document.getElementById('adminLoginEmail').value.trim();
+        const pass = document.getElementById('adminLoginPass').value.trim();
+
+        try {
+            const res = await fetch(`${BASE_URL}/admin-login/${email}/${pass}`);
+            const data = await res.text();
+
+            if (res.ok && data === 'true') {
+                alert('Login success!');
+                // Store credentials in sessionStorage (if needed in next page)
+                sessionStorage.setItem('adminEmail', email);
+                sessionStorage.setItem('adminPass', pass);
+
+                // Redirect to control panel
+                window.location.href = 'admincontrol';
+            } else {
+                alert('Login failed: Invalid credentials.');
+            }
+        } catch (err) {
+            alert('Login error');
+            console.error(err);
+        }
+    }
+
+
+    async function createNewAdmin() {
+        const currentEmail = document.getElementById('currentAdminEmail').value.trim();
+        const currentPass = document.getElementById('currentAdminPass').value.trim();
+
+        const newName = document.getElementById('newAdminName').value.trim();
+        const newEmail = document.getElementById('newAdminEmail').value.trim();
+        const newPass = document.getElementById('newAdminPass').value.trim();
+
+        const url = `${BASE_URL}/new-admin/${currentEmail}?pass=${encodeURIComponent(currentPass)}&newAdminName=${encodeURIComponent(newName)}&newAdminEmail=${encodeURIComponent(newEmail)}&newAdminPass=${encodeURIComponent(newPass)}`;
+
+        try {
+            const res = await fetch(url, { method: 'POST' });
+            if (res.ok) {
+                alert('New admin created successfully!');
+            } else {
+                alert('Failed to create new admin.');
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('An error occurred while creating admin.');
+        }
+    }
+</script>
+</body>
+</html>

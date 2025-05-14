@@ -22,12 +22,21 @@ public class DayService {
     @Autowired
     private UserRepository userRepository;
     public void addDay(ObjectId userId, Day newDay) {
-        newDay.setUserId(userId);
-        newDay.setId(new ObjectId());
-//        System.out.println("New day is: " + newDay);
-        this.userService.addTaskToUser(userId, newDay.getId());
-        dayRepository.save(newDay);
-        updateUserProgress(userId);
+        if(doesTodayExists(userId)){
+            updateDay(userId, newDay);
+        } else {
+            newDay.setUserId(userId);
+            newDay.setId(new ObjectId());
+//          System.out.println("New day is: " + newDay);
+            this.userService.addTaskToUser(userId, newDay.getId());
+            dayRepository.save(newDay);
+            updateUserProgress(userId);
+        }
+    }
+    public boolean doesTodayExists(ObjectId userId) {
+        Optional<Day> reqDay = dayRepository.findByUserIdAndDateFor(userId, LocalDate.now());
+        if(reqDay.isPresent()) return true;
+        else return false;
     }
     public void updateDay(ObjectId userId, Day updatedDay) {
         Optional<Day> existing = dayRepository.findByUserIdAndDateFor(userId, updatedDay.getDateFor());

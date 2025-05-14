@@ -18,10 +18,10 @@ public class DayController {
     private DayService dayService;
     @PostMapping("/add-task/{userId}")
     private ResponseEntity<?> addDay(@PathVariable("userId") ObjectId userId, @RequestBody Day newDay) {
-        System.out.println("Received request to add tasks for userId: " + userId);
-        System.out.println("Request Body (newDay): " + newDay.getTasks());
-        System.out.println("Request Body (newDay): " + newDay.getDateFor());
-        System.out.println("Request Body (newDay): " + newDay.getUserId());
+//        System.out.println("Received request to add tasks for userId: " + userId);
+//        System.out.println("Request Body (newDay): " + newDay.getTasks());
+//        System.out.println("Request Body (newDay): " + newDay.getDateFor());
+//        System.out.println("Request Body (newDay): " + newDay.getUserId());
         try {
             System.out.println("Adding tasks for user " + userId + ": " + newDay);
             dayService.addDay(userId, newDay);
@@ -65,4 +65,14 @@ public class DayController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/is-today-present")
+    private ResponseEntity<?> isTodayPresent(@PathVariable("userId") ObjectId userId) {
+        try {
+            return new ResponseEntity<>(dayService.doesTodayExists(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Failed to check today for user " + userId + ": " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

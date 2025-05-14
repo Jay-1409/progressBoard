@@ -29,12 +29,33 @@
         a:hover {
             text-decoration: underline;
         }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2b6cb0;
+        }
     </style>
 </head>
 <body>
 <h1>ProgressBoard Backend</h1>
 <p>This is the backend service for the <strong>ProgressBoard</strong> application.</p>
 <p>View the source code on <a href="https://github.com/jay-1409/progressBoard" target="_blank">GitHub</a></p>
-<p>Forms at \forms </p>
+<!--<p>Forms at <code>/forms</code></p>-->
+
+<div class="button-container">
+    <button onclick="window.location.href='/admin'">Go to Admin Panel</button>
+    <button onclick="window.location.href='/forms'">Go to Forms</button>
+</div>
 </body>
 </html>

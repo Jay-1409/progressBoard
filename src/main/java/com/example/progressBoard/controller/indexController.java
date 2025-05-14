@@ -13,4 +13,8 @@ public class indexController {
     }
     @GetMapping("/forms")
     public String formsPage() {return "forms";}
+    @GetMapping("/admin")
+    public String adminPage() {return "admin";}
+    @GetMapping("/admincontrol")
+    public String admincontrol() {return "admincontrol";}
 }

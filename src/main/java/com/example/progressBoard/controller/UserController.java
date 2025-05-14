@@ -46,5 +46,13 @@ public class UserController {
             return new ResponseEntity<>("Failed to add user to group: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/get-userid/{userId}")
+    public ResponseEntity<?> getUserId(@PathVariable ObjectId userId) {
+        try {
+            return new ResponseEntity<>(userService.getUserName(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 //    get tasks
 }

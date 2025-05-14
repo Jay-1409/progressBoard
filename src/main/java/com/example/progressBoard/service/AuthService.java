@@ -7,6 +7,8 @@ import com.example.progressBoard.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.Optional;
 @Component
@@ -42,6 +44,20 @@ public class AuthService {
             String reqPass = activGroup.getGroupPass();
             System.out.println("Adding user to group: " + groupId + "Entered pass: " + inPass + " Req Pass: " + reqPass);
             return reqPass.equals(inPass);
+        }
+        return false;
+    }
+    private final Map<String, Integer> otpStore = new ConcurrentHashMap<>();
+    public int generateOtp(String email) {
+        int otp = (int)(Math.random() * 9000) + 1000;
+        otpStore.put(email, otp);
+        return otp;
+    }
+    public boolean validateOtp(String email, int otp) {
+        Integer storedOtp = otpStore.get(email);
+        if (storedOtp != null && storedOtp == otp) {
+            otpStore.remove(email);
+            return true;
         }
         return false;
     }

@@ -65,7 +65,7 @@ public class DayController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("/is-today-present")
+    @GetMapping("/is-today-present/{userId}")
     private ResponseEntity<?> isTodayPresent(@PathVariable("userId") ObjectId userId) {
         try {
             return new ResponseEntity<>(dayService.doesTodayExists(userId), HttpStatus.OK);

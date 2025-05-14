@@ -5,9 +5,11 @@ import com.example.progressBoard.entity.User;
 import com.example.progressBoard.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -42,5 +44,13 @@ public class UserService {
         } else {
             System.out.println("COULD NOT FIND THE USER : " + UUID);
         }
+    }
+    public String getUserName(ObjectId userId) {
+        Optional<User> reqUsr = userRepository.findById(userId);
+        if(reqUsr.isPresent()){
+            User activeUsr = reqUsr.get();
+            return activeUsr.getUsername();
+        }
+        return "No user name found!";
     }
 }

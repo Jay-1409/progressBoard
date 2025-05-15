@@ -57,6 +57,7 @@ public class GroupService {
                     groupUserData data = new groupUserData();
                     data.setUserName(username);
                     data.setUserProgress(progress);
+                    data.setUserId((memberId.toString()));
                     mem_prog.add(data);
                 }
             }

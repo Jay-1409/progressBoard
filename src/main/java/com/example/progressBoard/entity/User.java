@@ -17,6 +17,16 @@ public class User {
     private List<ObjectId> groupIds = new ArrayList<>();
     private List<ObjectId> DayIds = new ArrayList<>();
     private double todayProgress;
+    private List<Double> previousProgress;
+
+    public List<Double> getPreviousProgress() {
+        return previousProgress;
+    }
+
+    public void setPreviousProgress(List<Double> previousProgress) {
+        this.previousProgress = previousProgress;
+    }
+
     public double getTodayProgress() {
         return todayProgress;
     }

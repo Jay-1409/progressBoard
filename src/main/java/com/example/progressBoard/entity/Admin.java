@@ -3,7 +3,7 @@ package com.example.progressBoard.entity;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.util.*;
 @Document(collection = "admin")
 public class Admin {
     @Id

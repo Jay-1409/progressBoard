@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +53,24 @@ public class UserService {
             return activeUsr.getUsername();
         }
         return "No user name found!";
+    }
+    public int calculateStreak(ObjectId userId) {
+        Optional<User> reqUser = userRepository.findById(userId);
+        if(reqUser.get()) {
+            User activeUser = reqUser.get();
+            List<Double> progress = activeUser.getPreviousProgress();
+            int n = progress.toArray().length;
+            int streak = 0;
+            for (int i = progress.size() - 1; i >= 0; i--) {
+                if (progress.get(i) == 100.0) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            return streak;
+        }
+        System.out.println("USER NOT FOUND: " + userId);
+        return -1;
     }
 }

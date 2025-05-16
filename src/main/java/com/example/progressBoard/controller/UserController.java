@@ -54,5 +54,13 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/get-user-streak/{userId}")
+    public ResponseEntity<?> getUserStreak(@PathVariable("userId") ObjectId userId) {
+        try {
+            retrun new ResponseEntity<>(userService.calculateStreak(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),.BAD_REQUEST);
+        }
+    }
 //    get tasks
 }

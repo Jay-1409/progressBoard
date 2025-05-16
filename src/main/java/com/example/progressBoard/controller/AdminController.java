@@ -39,7 +39,8 @@ public class AdminController {
     @GetMapping("/resetAllProgress")
     public ResponseEntity<?> resetProgress(){
         try {
-            return new ResponseEntity<>(adminService.resetProgressForAllUsers(), HttpStatus.OK);
+            adminService.resetProgressForAllUsers();
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }

@@ -21,14 +21,13 @@ public class AdminService {
     public boolean validate(ObjectId adminId) {
         return true;
     }
-    @Scheduled(cron = "0 0 0 * * ?")
-    public boolean resetProgressForAllUsers() {
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Kolkata")
+    public void resetProgressForAllUsers() {
         List<User> allUsers = userRepository.findAll();
         for(User user : allUsers){
             user.setTodayProgress(0);
         }
         userRepository.saveAll(allUsers);
-        return true;
     }
     public boolean createNewAdmin(String userName, String adminEmail, String password) {
         Optional<Admin> reqAdmin = adminRepository.findByEmail(adminEmail);
